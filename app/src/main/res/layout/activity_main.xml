@@ -23,11 +23,14 @@
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/ic_planta2" />
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+
+    <LinearLayout
         android:id="@+id/constraintLayout"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:background="@drawable/rectangle2"
+        android:background="@drawable/bg_retangulo"
+        android:orientation="vertical"
+        android:gravity="center"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
@@ -37,196 +40,188 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginTop="25dp"
             android:gravity="center"
-            android:orientation="vertical"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:layout_editor_absoluteX="0dp">
+            android:orientation="vertical">
 
-            <ImageView
-                android:layout_width="80dp"
-                android:layout_height="80dp"
-                android:src="@drawable/temperatura" />
-
-            <!-- <Button
-                android:id="@+id/btnlerTemperatura"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:backgroundTint="#279EFF"
-                android:hint="Ler Temperatura"
-                android:textStyle="bold"
-                android:textColorHint="@color/white"
-                />
-                -->
-
-            <TextView
-                android:id="@+id/txtTemp"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:text="Temperatura"
-                android:textAlignment="center"
-                android:textColor="@color/black"
-                android:textSize="25sp"
-                android:textStyle="bold" />
-
-
+            <!--Temperatura-->
             <LinearLayout
-                android:layout_width="wrap_content"
+                android:layout_width="160dp"
                 android:layout_height="wrap_content"
+                android:orientation="vertical"
                 android:gravity="center"
-                android:orientation="horizontal">
+                android:layout_margin="5dp">
+
+                <ImageView
+                    android:layout_width="80dp"
+                    android:layout_height="80dp"
+                    android:src="@drawable/temperatura" />
 
                 <TextView
-                    android:id="@+id/txtTemperatura"
+                    android:id="@+id/txtTemp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
-                    android:text="0,0"
+                    android:text="Temperatura"
                     android:textAlignment="center"
                     android:textColor="@color/black"
                     android:textSize="20sp"
                     android:textStyle="bold" />
-
-                <TextView
-                    android:id="@+id/txtGraus"
-                    android:layout_width="match_parent"
+                <LinearLayout
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:text=" º C"
-                    android:textAlignment="center"
-                    android:textColor="@color/black"
-                    android:textSize="20sp"
-                    android:textStyle="bold" />
+                    android:gravity="center"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/txtTemperatura"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:text="0,0"
+                        android:textAlignment="center"
+                        android:textColor="@color/black"
+                        android:textSize="20sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/txtGraus"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:text=" º C"
+                        android:textAlignment="center"
+                        android:textColor="@color/black"
+                        android:textSize="20sp"
+                        android:textStyle="bold" />
+
+                </LinearLayout>
 
             </LinearLayout>
+            <!--fim temperatura-->
 
-
-            <ImageView
-                android:layout_width="80dp"
-                android:layout_height="80dp"
-                android:layout_marginTop="15dp"
-                android:src="@drawable/ic_umidade" />
-
-            <!--<Button
-                android:id="@+id/btnlerUmidade"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:backgroundTint="#279EFF"
-                android:hint="Ler Te"
-                android:textStyle="bold"
-                android:textColorHint="@color/white"
-                />
-                -->
-
-            <TextView
-                android:id="@+id/txt_umidadeAr"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:text="Umidade do Ar"
-                android:textAlignment="center"
-                android:textColor="@color/black"
-                android:textSize="25sp"
-                android:textStyle="bold" />
-
-
+            <!-- umidade do ar-->
             <LinearLayout
-                android:layout_width="wrap_content"
+                android:layout_width="160dp"
                 android:layout_height="wrap_content"
+                android:orientation="vertical"
                 android:gravity="center"
-                android:orientation="horizontal">
+                android:layout_margin="5dp">
+                <ImageView
+                    android:layout_width="80dp"
+                    android:layout_height="80dp"
+                    android:layout_marginTop="15dp"
+                    android:src="@drawable/ic_umidade" />
 
                 <TextView
-                    android:id="@+id/txtUmidadeAr"
+                    android:id="@+id/txt_umidadeAr"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
-                    android:text="0"
+                    android:text="Umidade do Ar"
                     android:textAlignment="center"
                     android:textColor="@color/black"
                     android:textSize="20sp"
                     android:textStyle="bold" />
 
-                <TextView
-                    android:id="@+id/txtPorcentagemAr"
-                    android:layout_width="match_parent"
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:text=" %"
-                    android:textAlignment="center"
-                    android:textColor="@color/black"
-                    android:textSize="20sp"
-                    android:textStyle="bold" />
+                    android:gravity="center"
+                    android:orientation="horizontal"
+                    android:padding="15dp">
+
+                    <TextView
+                        android:id="@+id/umidadeAr"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:text="0"
+                        android:textAlignment="center"
+                        android:textColor="@color/black"
+                        android:textSize="20sp"
+                        android:textStyle="bold"
+                        android:layout_marginEnd="5dp"/>
+
+                    <TextView
+                        android:id="@+id/txtPorcentagemAr"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:text=" %"
+                        android:textAlignment="center"
+                        android:textColor="@color/black"
+                        android:textSize="20sp"
+                        android:textStyle="bold"
+                        />
+
+                </LinearLayout>
 
             </LinearLayout>
+            <!--fim umidade do ar-->
 
-
-            <ImageView
-                android:layout_width="80dp"
-                android:layout_height="80dp"
-                android:layout_marginTop="15dp"
-                android:src="@drawable/ic_sensor2" />
-
-            <!--<Button
-                android:id="@+id/btnlerUmidade"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:backgroundTint="#279EFF"
-                android:hint="Ler Te"
-                android:textStyle="bold"
-                android:textColorHint="@color/white"
-                />
-                -->
-
-            <TextView
-                android:id="@+id/txt_bomba"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:text="Umidade do Solo"
-                android:textAlignment="center"
-                android:textColor="@color/black"
-                android:textSize="25sp"
-                android:textStyle="bold" />
-
-
+            <!--umidade do solo-->
             <LinearLayout
-                android:layout_width="wrap_content"
+                android:layout_width="160dp"
                 android:layout_height="wrap_content"
-                android:gravity="center"
-                android:orientation="horizontal"
-                android:layout_marginBottom="20dp">
+                android:orientation="vertical"
+                android:gravity="center">
+
+                <ImageView
+                    android:layout_width="80dp"
+                    android:layout_height="80dp"
+                    android:layout_marginTop="15dp"
+                    android:src="@drawable/ic_sensor2" />
 
                 <TextView
-                    android:id="@+id/txtUmidadeSolo"
+                    android:id="@+id/txt_bomba"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
-                    android:text="0"
+                    android:text="Umidade do Solo"
                     android:textAlignment="center"
                     android:textColor="@color/black"
                     android:textSize="20sp"
                     android:textStyle="bold" />
 
-                <TextView
-                    android:id="@+id/txtPorcentagem"
-                    android:layout_width="match_parent"
+                <LinearLayout
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:text=" %"
-                    android:textAlignment="center"
-                    android:textColor="@color/black"
-                    android:textSize="20sp"
-                    android:textStyle="bold" />
+                    android:gravity="center"
+                    android:orientation="horizontal"
+                    android:layout_marginBottom="20dp">
+
+                    <TextView
+                        android:id="@+id/txtUmidadeSolo"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:text="0"
+                        android:textAlignment="center"
+                        android:textColor="@color/black"
+                        android:textSize="20sp"
+                        android:textStyle="bold"
+                        android:layout_marginEnd="5dp"/>
+
+                    <TextView
+                        android:id="@+id/txtPorcentagem"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:text=" %"
+                        android:textAlignment="center"
+                        android:textColor="@color/black"
+                        android:textSize="20sp"
+                        android:textStyle="bold"
+                        />
+
+                </LinearLayout>
 
             </LinearLayout>
-
-
-
+            <!--fim umidade do solo-->
         </LinearLayout>
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+    </LinearLayout>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

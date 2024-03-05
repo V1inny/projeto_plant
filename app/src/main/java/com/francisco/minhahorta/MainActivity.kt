@@ -6,119 +6,95 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.*
 import com.francisco.minhahorta.databinding.ActivityMainBinding
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
+import com.google.firebase.firestore.CollectionReference
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import java.util.*
 
 class MainActivity : AppCompatActivity() {
 
     lateinit var binding: ActivityMainBinding
-    private lateinit var database: FirebaseDatabase
-    private lateinit var myReference: DatabaseReference
+    private lateinit var realtimeDatabase: FirebaseDatabase
+    private lateinit var firestore: FirebaseFirestore
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        supportActionBar!!.hide()
+        supportActionBar?.hide()
 
-        window.statusBarColor = Color.parseColor("#279EFF")
+        window.statusBarColor = Color.parseColor("#14C38E")
 
-       // binding.btnlerTemperatura.setOnClickListener{readData()}
-        
-       /* binding.btnBomba.setOnCheckedChangeListener { compoundButton, onSwitch ->
-            if (onSwitch)
-                //binding.btnBomba.setBackgroundColor(Color.BLUE)
-                ligar()
-            else
-                deligar()
-                //binding.btnBomba.setBackgroundColor(Color.RED)
+        realtimeDatabase = FirebaseDatabase.getInstance()
+        firestore = Firebase.firestore
 
-        }*/
-        readTemperatura()
-        readUmidade()
-        readUmidadeSolo()
+        val realtimeReference = realtimeDatabase.reference.child("sensorData")
+        val firestoreCollection = firestore.collection("sensorData")
 
-    }
+        realtimeReference.addValueEventListener(object : ValueEventListener {
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                for (sensorSnapshot in dataSnapshot.children) {
+                    when (sensorSnapshot.key) {
+                        "temperatura" -> {
+                            val temperatura = sensorSnapshot.value.toString().toFloat()
+                            binding.txtTemperatura.text = temperatura.toString()
 
-    private fun readTemperatura(){
-        myReference = FirebaseDatabase.getInstance().getReference("Sensores")
-        myReference.child("temperatura").get().addOnSuccessListener {
-            if(it.exists()){
-                val graus: Float = it.value.toString().toFloat()
-                //Toast.makeText(this,"Temperatura lida com Sucesso",Toast.LENGTH_SHORT).show()
-                binding.txtTemperatura.setText(graus.toString())
-            }else{
-                Toast.makeText(this,"Sensores/tempeartura não existe",Toast.LENGTH_SHORT).show()
+                            val coolerStatus =
+                                if (temperatura > 25) "cooler_ligado" else "cooler_desligada"
+                            updateFirestoreStatus(firestoreCollection, "coolerStatus", coolerStatus)
+                        }
+
+                        "umidade" -> {
+                            val umidade = sensorSnapshot.value.toString().toInt()
+                            binding.umidadeAr.text = umidade.toString()
+                        }
+
+                        "solo" -> {
+                            val umidadeSolo = sensorSnapshot.value.toString().toInt()
+                            binding.txtUmidadeSolo.text = umidadeSolo.toString()
+
+                            val bombaStatus =
+                                if (umidadeSolo > 600) "bomba_ligado" else "bomba_desligado"
+                            updateFirestoreStatus(firestoreCollection, "bombaStatus", bombaStatus)
+                        }
+                    }
+                }
             }
-        }.addOnFailureListener{
-            Toast.makeText(this,"FALHA",Toast.LENGTH_SHORT).show()
-        }
-    }
-    private fun readUmidade(){
-        myReference = FirebaseDatabase.getInstance().getReference("Sensores")
-        myReference.child("umidade").get().addOnSuccessListener {
-            if(it.exists()){
-                val umidadeAr: Int = it.value.toString().toInt()
-                //Toast.makeText(this,"Umidade do Ar lida com Sucesso",Toast.LENGTH_SHORT).show()
-                binding.txtPorcentagemAr.setText(umidadeAr.toString())
-            }else{
-                Toast.makeText(this,"Sensores/umidade não existe",Toast.LENGTH_SHORT).show()
+
+            override fun onCancelled(databaseError: DatabaseError) {
+                Toast.makeText(
+                    applicationContext,
+                    "Falha ao obter dados do banco de dados",
+                    Toast.LENGTH_SHORT
+                ).show()
             }
-        }.addOnFailureListener{
-            Toast.makeText(this,"FALHA",Toast.LENGTH_SHORT).show()
-        }
+        })
     }
 
-    private fun readUmidadeSolo(){
-        myReference = FirebaseDatabase.getInstance().getReference("Sensores")
-        myReference.child("umidadeSolo").get().addOnSuccessListener {
-            if(it.exists()){
-                val umidadeSolo: Int = it.value.toString().toInt()
-                //Toast.makeText(this,"Umidade do Solo lida com Sucesso",Toast.LENGTH_SHORT).show()
-                binding.txtPorcentagem.setText(umidadeSolo.toString())
-            }else{
-                Toast.makeText(this,"Sensores/umidadeSolo não existe",Toast.LENGTH_SHORT).show()
-            }
-        }.addOnFailureListener{
-            Toast.makeText(this,"FALHA",Toast.LENGTH_SHORT).show()
-        }
-    }
+    private fun updateFirestoreStatus(
+        collection: CollectionReference,
+        documentName: String,
+        newStatus: String
+    ) {
+        val timestamp = com.google.firebase.Timestamp.now()
+        val newDocumentName = "$documentName-${timestamp.seconds}" // Use seconds for simplicity
+        val statusRef = collection.document(newDocumentName)
 
-    /*private fun ligar(){
-        var ligar: Int = 1
+        // Verificar o status atual no Firestore
+        statusRef.get().addOnSuccessListener { document ->
+            val currentStatus = document?.getString("status")
 
-        myReference = FirebaseDatabase.getInstance().getReference("Temperatura")
-        myReference.child("bomba").setValue(ligar).addOnSuccessListener {
-            Toast.makeText(this,"Bomba Ligada!",Toast.LENGTH_SHORT).show()
-        }.addOnFailureListener{
-            Toast.makeText(this,"Falha ao inserir dados!",Toast.LENGTH_SHORT).show()
-        }
-        myReference.child("insert").get().addOnSuccessListener {
-            if (it.exists()) {
-                val resultado: Int = it.value.toString().toInt()
-                binding.btnBomba.setText(resultado.toString())
+            // Se o status atual é diferente do novo status, realizar a atualização
+            if (currentStatus != newStatus) {
+                val statusData = mapOf("status" to newStatus, "tempo" to timestamp)
+                statusRef.set(statusData)
             }
         }
     }
-
-    private fun deligar(){
-        var desligar: Int = 0
-
-        myReference = FirebaseDatabase.getInstance().getReference("Temperatura")
-        myReference.child("bomba").setValue(desligar).addOnSuccessListener {
-            Toast.makeText(this,"Bomba Dsligada!",Toast.LENGTH_SHORT).show()
-        }.addOnFailureListener{
-            Toast.makeText(this,"Falha ao inserir dados!",Toast.LENGTH_SHORT).show()
-        }
-        myReference.child("insert").get().addOnSuccessListener {
-            if (it.exists()) {
-                val resultado: Int = it.value.toString().toInt()
-                binding.btnBomba.setText(resultado.toString())
-            }
-        }
-    }*/
-
 }
-
